@@ -11,11 +11,8 @@ import br.ufpb.dce.aps.coffeemachine.MockComponentsFactory;
 public class MyCoffeeMachineTest extends CoffeeMachineTest{
 
 
-	protected CoffeeMachine createFacade(ComponentsFactory factory) {
-		MyCoffeeMachine coffeeMachine = new MyCoffeeMachine(factory);
-
-		
-		return coffeeMachine;
+	protected CoffeeMachine createFacade(ComponentsFactory factory){
+		return new MyCoffeeMachine(factory);
 		
 	}
 
