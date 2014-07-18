@@ -7,8 +7,7 @@ import br.ufpb.dce.aps.coffeemachine.MockComponentsFactory;
 
 public class MyCoffeeMachine implements CoffeeMachine {
 
-	private int totalCent;
-	private int totalGeral;
+	private int totalCents;
 	private ComponentsFactory factory;
 
 	public MyCoffeeMachine(ComponentsFactory factory) {
@@ -17,21 +16,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	}
 
 	public void insertCoin(Coin coin) {
-		totalCent = coin.getValue();
-		int Decimal = totalCent / 100;
-		int Centavos = totalCent % 100;
-		this.factory.getDisplay()
-				.info("Total: US$ " + Decimal + "." + Centavos);
+		this.totalCents += coin.getValue();
+		this.factory.getDisplay().info ("Total: US$ "+this.totalCents/100+"." + this.totalCents%100);
 	}
-
-	public void insertCoins(Coin coins) {
-		totalCent = coins.getValue();
-		totalGeral = totalGeral + totalCent;
-		int Decimals = totalGeral / 100;
-		int Centavo = totalGeral % 100;
-		this.factory.getDisplay()
-				.info("Total: US$ " + Decimals + "." + Centavo);
-
-	}
-
 }
