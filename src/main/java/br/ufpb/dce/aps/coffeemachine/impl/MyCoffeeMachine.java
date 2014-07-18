@@ -27,5 +27,13 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		
 		}
 	}
+
+	public void cancel() {
+		if(totalCents == 0) {
+			throw new CoffeeMachineException("Sem moedas");
+			
+		}
+		
+	}
 	
 }
