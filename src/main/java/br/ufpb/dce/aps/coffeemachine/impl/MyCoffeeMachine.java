@@ -1,5 +1,7 @@
 package br.ufpb.dce.aps.coffeemachine.impl;
 
+import java.util.ArrayList;
+
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachine;
 import br.ufpb.dce.aps.coffeemachine.CoffeeMachineException;
 import br.ufpb.dce.aps.coffeemachine.Coin;
@@ -11,7 +13,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 
 	private int totalCents;
 	private ComponentsFactory factory;
-
+	ArrayList< Coin > moedas = new ArrayList< Coin >();
+	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		this.factory = factory;
 		this.factory.getDisplay().info("Insert coins and select a drink!");
@@ -25,7 +28,18 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		}
 		catch(NullPointerException e){
 			throw new CoffeeMachineException("Esta moeda não é aceita"); 
+		}
 		
+		int size = moedas.size();
+		if (size== 0) {
+			moedas.add(coin);
+		}
+		
+		for(int i = 0; i< size ; i++){
+			if (coin == null || (coin.getValue() > moedas.get(i).getValue())) { 
+				moedas.add(i, coin);
+			
+			}
 		}
 	}
 
@@ -34,7 +48,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			throw new CoffeeMachineException("Sem moedas");
 		}else{
 			this.factory.getDisplay().warn(Messages.CANCEL_MESSAGE);
-			this.factory.getCashBox().release(Coin.halfDollar);
+			for(int i = 0; i< moedas.size() ; i++){
+				this.factory.getCashBox().release(moedas.get(i));
+			}
 			this.factory.getDisplay().info(Messages.INSERT_COINS_MESSAGE);
 		}
 		
