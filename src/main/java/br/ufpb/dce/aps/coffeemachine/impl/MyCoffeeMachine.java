@@ -36,7 +36,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		}
 		
 		for(int i = 0; i< size ; i++){
-			if (coin == null || (coin.getValue() > moedas.get(i).getValue())) { 
+			if (coin == null || (coin.getValue() >= moedas.get(i).getValue())) { 
 				moedas.add(i, coin);
 			
 			}
