@@ -66,16 +66,29 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.factory.getCupDispenser().contains(1);
 		this.factory.getWaterDispenser().contains(anyDouble());
 		this.factory.getCoffeePowderDispenser().contains(anyDouble());
+	
+		
+		if(drink == this.drink.BLACK_SUGAR){
+			this.factory.getSugarDispenser().contains(anyDouble());
+		}
 		
 		this.factory.getDisplay().info(Messages.MIXING);
 		this.factory.getCoffeePowderDispenser().release(anyDouble());
 		this.factory.getWaterDispenser().release(anyDouble());
-		this.factory.getDisplay().info(Messages.RELEASING);
+	
+		if(drink == this.drink.BLACK_SUGAR){
+			this.factory.getSugarDispenser().release(anyDouble());
+		}
 		
+		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
 		this.factory.getDrinkDispenser().release(anyDouble());
 		this.factory.getDisplay().info(Messages.TAKE_DRINK);
 		this.factory.getDisplay().info(Messages.INSERT_COINS);	
+		
+	
+	
+	
 	}
 	
 }
