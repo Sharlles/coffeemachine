@@ -65,7 +65,10 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.drink = drink;
 		this.factory.getCupDispenser().contains(1);
 		this.factory.getWaterDispenser().contains(anyDouble());
-		this.factory.getCoffeePowderDispenser().contains(anyDouble());
+		if(this.factory.getCoffeePowderDispenser().contains(anyDouble())== false){
+			this.factory.getDisplay().info(Messages.OUT_OF_COFFEE_POWDER);
+			cancel();
+		}
 	
 		
 		if(drink == this.drink.BLACK_SUGAR){
