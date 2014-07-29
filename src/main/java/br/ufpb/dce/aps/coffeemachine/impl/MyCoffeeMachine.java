@@ -103,6 +103,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 				returnCoins();
 				return;
 			}	
+		}
+		if(drink == this.drink.WHITE){
+			this.factory.getCreamerDispenser().contains(0.1);
 			
 		}
 		
@@ -113,7 +116,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		if(drink == this.drink.BLACK_SUGAR){
 			this.factory.getSugarDispenser().release(0.1);
 		}
-		
+	
+		if(drink == this.drink.WHITE){
+			this.factory.getCreamerDispenser().release(0.1);
+			
+		}
 		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
 		this.factory.getDrinkDispenser().release(0.1);
