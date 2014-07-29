@@ -75,6 +75,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	}
 
 	public void select(Drink drink) {
+		
 	
 		this.drink = drink;
 		
