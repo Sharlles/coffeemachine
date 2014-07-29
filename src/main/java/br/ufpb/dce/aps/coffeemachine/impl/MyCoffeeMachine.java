@@ -77,7 +77,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public void select(Drink drink) {
 	
 		this.drink = drink;
-		this.factory.getCupDispenser().contains(1);
+		
+		if(! factory.getCupDispenser().contains(1)){ 
+			factory.getDisplay().warn(Messages.OUT_OF_CUP); 
+			returnCoins();
+			return;
+		}
 		
 		if(! factory.getWaterDispenser().contains(0.1)){ 
 			factory.getDisplay().warn(Messages.OUT_OF_WATER); 
