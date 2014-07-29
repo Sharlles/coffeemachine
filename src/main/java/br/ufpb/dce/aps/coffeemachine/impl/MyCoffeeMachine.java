@@ -42,7 +42,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		for(int i = 0; i< size ; i++){
 			if (coin == null || (coin.getValue() >= moedas.get(i).getValue())) { 
 				moedas.add(i, coin);
-			
+			}
+			else{
+				moedas.add(coin);
 			}
 		}
 	}
@@ -52,22 +54,36 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			throw new CoffeeMachineException("Sem moedas");
 		}else{
 			this.factory.getDisplay().warn(Messages.CANCEL);
-			for(int i = 0; i< moedas.size() ; i++){
-				this.factory.getCashBox().release(moedas.get(i));
+			if(moedas.size() > 0) {
+				returnCoins();
 			}
-			this.factory.getDisplay().info(Messages.INSERT_COINS);
 		}
+	}
+	
+	void returnCoins(){
 		
+		for(int i = 0; i< moedas.size() ; i++){
+			
+			this.factory.getCashBox().release(moedas.get(i));
+		}
+		this.factory.getDisplay().info(Messages.INSERT_COINS);
+	}
+
+	void newSession(){
+		moedas.clear();
+		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
 
 	public void select(Drink drink) {
 	
 		this.drink = drink;
 		this.factory.getCupDispenser().contains(1);
-		this.factory.getWaterDispenser().contains(anyDouble());
-		if(this.factory.getCoffeePowderDispenser().contains(anyDouble())== false){
-			this.factory.getDisplay().info(Messages.OUT_OF_COFFEE_POWDER);
-			cancel();
+		this.factory.getWaterDispenser().contains(0.1);
+		
+		if(! factory.getCoffeePowderDispenser().contains(0.1)){ 
+			factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER); 
+			returnCoins();
+			return;
 		}
 	
 		
@@ -86,10 +102,10 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
 		this.factory.getDrinkDispenser().release(anyDouble());
-		this.factory.getDisplay().info(Messages.TAKE_DRINK);
-		this.factory.getDisplay().info(Messages.INSERT_COINS);	
 		
-		moedas.clear();
+		this.factory.getDisplay().info(Messages.TAKE_DRINK);	
+		
+		newSession();
 	
 	
 	}
