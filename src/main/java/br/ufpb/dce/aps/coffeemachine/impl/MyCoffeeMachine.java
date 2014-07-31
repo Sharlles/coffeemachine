@@ -91,36 +91,72 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		return contCoins - manager.getPreco();
 	}
 	
-	
-	public boolean planejarTroco(int troco) {
-		
-		for (Coin moeda : Coin.reverse()) {
-			
-			if (moeda.getValue() <= troco && this.factory.getCashBox().count(moeda) > 0) {
-				troco -= moeda.getValue();
+	public int[] planejarTroco() {
+
+		int troco = calcTroco();
+		int[] changePlan = new int[6];
+		int i = 0;
+		for (Coin r : Coin.reverse()) {
+			if (r.getValue() <= troco && this.factory.getCashBox().count(r) > 0) {
+				while (r.getValue() <= troco) {
+					troco -= r.getValue();
+					changePlan[i]++;
+				}
+			}
+			i++;
+		}
+		if (troco != 0) {
+			throw new CoffeeMachineException("");
+		}
+
+		return changePlan;
+	}
+
+	private void liberarTroco(int[] changePlan) {
+
+		for (int i = 0; i < changePlan.length; i++) {
+			int count = changePlan[i];
+			Coin coin = Coin.reverse()[i];
+
+			for (int j = 1; j <= count; j++) {
+				this.factory.getCashBox().release(coin);
 			}
 		}
-			
-		return troco == 0;
 	}
+
 	
-	public void liberarTroco(int troco2) {
+	
+	//public boolean planejarTroco(int troco) {
 		
-		for (Coin moeda : Coin.reverse()) {
-			while (moeda.getValue() <= troco2) {
-				factory.getCashBox().release(moeda);
-				this.troco.add(moeda);
-				troco2 -= moeda.getValue();
-			}
+		//for (Coin moeda : Coin.reverse()) {
+			
+			//if (moeda.getValue() <= troco && this.factory.getCashBox().count(moeda) > 0) {
+				//troco -= moeda.getValue();
+			//}
+		//}
+			
+		//return troco == 0;
+	//}
+	
+	//public void liberarTroco(int troco2) {
+		
+		//for (Coin moeda : Coin.reverse()) {
+			//while (moeda.getValue() <= troco2) {
+				//factory.getCashBox().release(moeda);
+				//this.troco.add(moeda);
+				//troco2 -= moeda.getValue();
+			//}
 			
 			
-		}
-	}
+		//}
+	//}
+
 
 	public void select(Drink drink) {
 		
 		this.drink = drink;
 		this.manager.selecionarCafe(drink);
+
 		
 		if(this.totalCents < manager.getPreco() || this.totalCents == 0) {
 			factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
@@ -137,27 +173,39 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			returnCoins();
 			return;
 		} 
+		
+		int[] changePlan = null;
 
-
-		if(drink == this.drink.WHITE_SUGAR){
-			planejarTroco(calcTroco());	
+		try {
+			changePlan = planejarTroco();
+		
+		} catch (Exception e) {
+			factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
+			returnCoins();
+			return;
 		}
 		
-		if(drink == this.drink.WHITE){
-			if(!planejarTroco(this.totalCents - manager.getPreco())) {
-				factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
-				returnCoins();
-				return;
-			}
-		}
-
+		//if(drink == this.drink.WHITE_SUGAR){
+			//planejarTroco(calcTroco());	
+		//}
+		
+		//if(drink == this.drink.WHITE){
+			//if(!planejarTroco(this.totalCents - manager.getPreco())) {
+				//factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
+				//returnCoins();
+				//return;
+			//}
+		//}
+		
 		this.manager.mix();
 		this.manager.release();
 		
-		if(drink == this.drink.WHITE_SUGAR){
-		  liberarTroco(calcTroco());
+		//if(drink == this.drink.WHITE_SUGAR){
+		 // liberarTroco(calcTroco());
 
-		}
+		//}
+		
+		liberarTroco(changePlan);
 		
 		//if(drink == this.drink.WHITE_SUGAR){
 			//liberarTroco(this.totalCents - manager.getPreco());
