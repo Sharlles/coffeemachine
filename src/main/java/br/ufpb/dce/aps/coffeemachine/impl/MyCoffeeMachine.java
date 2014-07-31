@@ -77,6 +77,21 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
 	
+	
+	public int calcTroco(){
+		int contCoins = 0;
+		for(Coin c : Coin.reverse()){
+			for(Coin aux : moedas){
+				if(aux == c){
+					contCoins = contCoins + aux.getValue();
+				}
+			}
+		}
+		
+		return contCoins - manager.getPreco();
+	}
+	
+	
 	public boolean planejarTroco(int troco) {
 		
 		for (Coin moeda : Coin.reverse()) {
@@ -93,11 +108,12 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		
 		for (Coin moeda : Coin.reverse()) {
 			while (moeda.getValue() <= troco2) {
-
 				factory.getCashBox().release(moeda);
 				this.troco.add(moeda);
 				troco2 -= moeda.getValue();
 			}
+			
+			
 		}
 	}
 
@@ -112,6 +128,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			return;
 		}
 		
+		
 		if (!this.manager.verificarIngredientes()) {
 			returnCoins();
 			return;
@@ -120,20 +137,24 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			returnCoins();
 			return;
 		} 
-		
+
 		if(drink == this.drink.WHITE_SUGAR){
-			planejarTroco(this.totalCents - manager.getPreco());
+			planejarTroco(calcTroco());	
 		}
 		
-		if(true){
-			newSession();
+		if(drink == this.drink.WHITE){
+			if(!planejarTroco(this.totalCents - manager.getPreco())) {
+				factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
+				returnCoins();
+				return;
+			}
 		}
-		
+
 		this.manager.mix();
 		this.manager.release();
 		
 		if(drink == this.drink.WHITE_SUGAR){
-			liberarTroco(this.totalCents - manager.getPreco());
+		  liberarTroco(calcTroco());
 		}
 		
 		
