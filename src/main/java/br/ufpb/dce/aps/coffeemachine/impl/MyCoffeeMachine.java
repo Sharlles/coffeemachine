@@ -90,7 +90,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		
 		return contCoins - manager.getPreco();
 	}
-	
+
 	public int[] planejarTroco() {
 
 		int troco = calcTroco();
@@ -107,6 +107,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		}
 		if (troco != 0) {
 			throw new CoffeeMachineException("");
+
 		}
 
 		return changePlan;
@@ -210,7 +211,6 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		//if(drink == this.drink.WHITE_SUGAR){
 			//liberarTroco(this.totalCents - manager.getPreco());
 		//}
-		
 		
 		newSession();
 	
