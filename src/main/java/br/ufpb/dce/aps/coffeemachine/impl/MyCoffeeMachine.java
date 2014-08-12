@@ -104,8 +104,13 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public void select(Drink drink) {
 		
 		this.drink = drink;
-		
 		this.manager.selecionarCafe(drink);
+		
+		if(this.totalCents < manager.getPreco() || this.totalCents == 0) {
+			factory.getDisplay().warn(Messages.NO_ENOUGHT_MONEY);
+			returnCoins();
+			return;
+		}
 		
 		if (!this.manager.verificarIngredientes()) {
 			returnCoins();
@@ -120,7 +125,6 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			planejarTroco(this.totalCents - manager.getPreco());
 		}
 		
-	
 		this.manager.mix();
 		this.manager.release();
 		
