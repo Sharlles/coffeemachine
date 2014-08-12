@@ -17,10 +17,13 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	private int totalCents;
 	private ComponentsFactory factory;
 	ArrayList< Coin > moedas = new ArrayList< Coin >();
+	ArrayList< Coin > troco = new ArrayList< Coin >();
 	private Drink drink;
+	private ManagerDrink manager;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		this.factory = factory;
+		this.manager = new ManagerDrink(this.factory);
 		this.factory.getDisplay().info("Insert coins and select a drink!");
 	}
 
@@ -73,63 +76,60 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		moedas.clear();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
+	
+	public boolean planejarTroco(int troco) {
+		
+		for (Coin moeda : Coin.reverse()) {
+			if (moeda.getValue() <= troco && this.factory.getCashBox().count(moeda) > 0) {
+					
+				troco -= moeda.getValue();
+			}
+		}
+			
+		return troco == 0;
+	}
+	
+	public void liberarTroco(int troco2) {
+		
+		for (Coin moeda : Coin.reverse()) {
+			while (moeda.getValue() <= troco2) {
+
+				factory.getCashBox().release(moeda);
+				this.troco.add(moeda);
+				troco2 -= moeda.getValue();
+			}
+		}
+	}
 
 	public void select(Drink drink) {
 		
-	
 		this.drink = drink;
 		
-		if(! factory.getCupDispenser().contains(1)){ 
-			factory.getDisplay().warn(Messages.OUT_OF_CUP); 
+		this.manager.selecionarCafe(drink);
+		
+		if (!this.manager.verificarIngredientes()) {
 			returnCoins();
 			return;
 		}
-		
-		if(! factory.getWaterDispenser().contains(0.1)){ 
-			factory.getDisplay().warn(Messages.OUT_OF_WATER); 
+		if(!this.manager.verificarAcucar()){ 
 			returnCoins();
 			return;
+		} 
+		
+		if(drink == this.drink.WHITE_SUGAR){
+			planejarTroco(this.totalCents - manager.getPreco());
 		}
 		
-		if(! factory.getCoffeePowderDispenser().contains(0.1)){ 
-			factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER); 
-			returnCoins();
-			return;
-		}
 	
+		this.manager.mix();
+		this.manager.release();
 		
-		if(drink == this.drink.BLACK_SUGAR){
-			if(! factory.getSugarDispenser().contains(0.1)){ 
-				factory.getDisplay().warn(Messages.OUT_OF_SUGAR); 
-				returnCoins();
-				return;
-			}	
-		}
-		if(drink == this.drink.WHITE){
-			this.factory.getCreamerDispenser().contains(0.1);
-			
+		if(drink == this.drink.WHITE_SUGAR){
+			liberarTroco(this.totalCents - manager.getPreco());
 		}
 		
-		this.factory.getDisplay().info(Messages.MIXING);
-		this.factory.getCoffeePowderDispenser().release(0.1);
-		this.factory.getWaterDispenser().release(0.1);
-	
-		if(drink == this.drink.BLACK_SUGAR){
-			this.factory.getSugarDispenser().release(0.1);
-		}
-	
-		if(drink == this.drink.WHITE){
-			this.factory.getCreamerDispenser().release(0.1);
-			
-		}
-		this.factory.getDisplay().info(Messages.RELEASING);
-		this.factory.getCupDispenser().release(1);
-		this.factory.getDrinkDispenser().release(0.1);
-		
-		this.factory.getDisplay().info(Messages.TAKE_DRINK);	
 		
 		newSession();
-	
 	
 	}
 	
