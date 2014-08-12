@@ -126,7 +126,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		}
 		
 		if(true){
-			
+			newSession();
 		}
 		
 		this.manager.mix();
