@@ -80,8 +80,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public boolean planejarTroco(int troco) {
 		
 		for (Coin moeda : Coin.reverse()) {
+			
 			if (moeda.getValue() <= troco && this.factory.getCashBox().count(moeda) > 0) {
-					
 				troco -= moeda.getValue();
 			}
 		}
@@ -124,6 +124,8 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		if(drink == this.drink.WHITE_SUGAR){
 			planejarTroco(this.totalCents - manager.getPreco());
 		}
+		
+
 		
 		this.manager.mix();
 		this.manager.release();
