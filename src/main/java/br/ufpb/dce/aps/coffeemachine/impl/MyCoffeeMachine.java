@@ -125,7 +125,9 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			planejarTroco(this.totalCents - manager.getPreco());
 		}
 		
-
+		if(true){
+			
+		}
 		
 		this.manager.mix();
 		this.manager.release();
