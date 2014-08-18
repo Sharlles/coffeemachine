@@ -121,20 +121,24 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			return;
 		} 
 		
-		if(drink == this.drink.WHITE_SUGAR){
+		if(this.totalCents == 0 || this.totalCents % manager.getPreco() != 0 ) {
 			planejarTroco(this.totalCents - manager.getPreco());
 		}
 		
-		if(true){
-			newSession();
-		}
+		//if(drink == this.drink.WHITE_SUGAR){
+		//planejarTroco(this.totalCents - manager.getPreco());
+		//this.totalCents % manager.getPreco() != 0 || this.totalCents == 0}
 		
 		this.manager.mix();
 		this.manager.release();
 		
-		if(drink == this.drink.WHITE_SUGAR){
+		if(this.totalCents == 0 || this.totalCents % manager.getPreco() != 0 ) {
 			liberarTroco(this.totalCents - manager.getPreco());
 		}
+		
+		//if(drink == this.drink.WHITE_SUGAR){
+			//liberarTroco(this.totalCents - manager.getPreco());
+		//}
 		
 		
 		newSession();
