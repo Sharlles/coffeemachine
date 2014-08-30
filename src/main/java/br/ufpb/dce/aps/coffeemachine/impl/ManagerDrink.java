@@ -47,7 +47,7 @@ public class ManagerDrink {
 	
 	public boolean verificarAcucar(){
 		if(this.drink.getDrink() == Drink.BLACK_SUGAR || this.drink.getDrink() == Drink.WHITE_SUGAR){
-			if (!this.factory.getSugarDispenser().contains(200)) {
+			if (!this.factory.getSugarDispenser().contains(5)) {
 				this.factory.getDisplay().warn(Messages.OUT_OF_SUGAR);
 				return false;
 			}

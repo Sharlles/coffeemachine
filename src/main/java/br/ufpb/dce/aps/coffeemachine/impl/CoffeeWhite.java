@@ -18,7 +18,7 @@ public class CoffeeWhite extends Bebida {
 	public void release() {
 		this.factory.getCreamerDispenser().release(50);
 		if (this.drink == drink.WHITE_SUGAR) {
-			this.factory.getSugarDispenser().release(100);
+			this.factory.getSugarDispenser().release(5);
 		}
 	}
 }
