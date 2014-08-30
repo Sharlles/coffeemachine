@@ -65,7 +65,7 @@ public class ManagerDrink {
 		this.drink.release();
 		this.factory.getDisplay().info(Messages.RELEASING);
 		this.factory.getCupDispenser().release(1);
-		this.factory.getDrinkDispenser().release(100);
+		this.factory.getDrinkDispenser().release(5);
 		this.factory.getDisplay().info(Messages.TAKE_DRINK);
 		
 	}	
