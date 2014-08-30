@@ -16,10 +16,11 @@ public class MyCoffeeMachine implements CoffeeMachine {
 
 	private int totalCents;
 	private ComponentsFactory factory;
-	ArrayList< Coin > moedas = new ArrayList< Coin >();
+	ArrayList< Coin > listaMoedas = new ArrayList< Coin >();
 	ArrayList< Coin > troco = new ArrayList< Coin >();
 	private Drink drink;
 	private ManagerDrink manager;
+	private int H = 0;
 	
 	public MyCoffeeMachine(ComponentsFactory factory) {
 		this.factory = factory;
@@ -37,27 +38,27 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			throw new CoffeeMachineException("Esta moeda não é aceita"); 
 		}
 		
-		int size = moedas.size();
+		int size = listaMoedas.size();
 		if (size== 0) {
-			moedas.add(coin);
+			listaMoedas.add(coin);
 		}
 		
 		for(int i = 0; i< size ; i++){
-			if (coin == null || (coin.getValue() >= moedas.get(i).getValue())) { 
-				moedas.add(i, coin);
+			if (coin == null || (coin.getValue() >= listaMoedas.get(i).getValue())) { 
+				listaMoedas.add(i, coin);
 			}
 			else{
-				moedas.add(coin);
+				listaMoedas.add(coin);
 			}
 		}
 	}
 
-	public void cancel() {
+	public void cancel() { // Este metodo cancela uma bebida
 		if(totalCents == 0) {
 			throw new CoffeeMachineException("Sem moedas");
 		}else{
 			this.factory.getDisplay().warn(Messages.CANCEL);
-			if(moedas.size() > 0) {
+			if(listaMoedas.size() > 0) {
 				returnCoins();
 			}
 		}
@@ -65,15 +66,15 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	
 	void returnCoins(){
 		
-		for(int i = 0; i< moedas.size() ; i++){
+		for(int i = 0; i< listaMoedas.size() ; i++){
 			
-			this.factory.getCashBox().release(moedas.get(i));
+			this.factory.getCashBox().release(listaMoedas.get(i));
 		}
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
 
 	void newSession(){
-		moedas.clear();
+		listaMoedas.clear();
 		this.factory.getDisplay().info(Messages.INSERT_COINS);
 	}
 	
@@ -81,7 +82,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 	public int calcTroco(){
 		int contCoins = 0;
 		for(Coin c : Coin.reverse()){
-			for(Coin aux : moedas){
+			for(Coin aux : listaMoedas){
 				if(aux == c){
 					contCoins = contCoins + aux.getValue();
 				}
@@ -138,7 +139,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		}
 		
 		
-		if (!this.manager.verificarIngredientes()) {
+		if (!this.manager.verificarIngredientes(drink)) {
 			returnCoins();
 			return;
 		}
@@ -160,7 +161,7 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			}
 		}
 		
-		this.manager.mix();
+		this.manager.mix(drink);
 		this.manager.release();
 		
 		if(drink != this.drink.BLACK){
