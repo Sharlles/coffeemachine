@@ -38,6 +38,7 @@ public class ManagerDrink {
 		}
 		else if (this.drink.getDrink() == Drink.WHITE || this.drink.getDrink() == Drink.WHITE_SUGAR){
 			if (!this.factory.getCreamerDispenser().contains(150)){
+				this.factory.getDisplay().warn(Messages.OUT_OF_CREAMER);
 				return false;
 			}
 		}
