@@ -91,29 +91,36 @@ public class MyCoffeeMachine implements CoffeeMachine {
 		return contCoins - manager.getPreco();
 	}
 	
-	
-	public boolean planejarTroco(int troco) {
-		
-		for (Coin moeda : Coin.reverse()) {
-			
-			if (moeda.getValue() <= troco && this.factory.getCashBox().count(moeda) > 0) {
-				troco -= moeda.getValue();
+	public int[] planejarTroco() {
+
+		int troco = calcTroco();
+		int[] changePlan = new int[6];
+		int i = 0;
+		for (Coin r : Coin.reverse()) {
+			if (r.getValue() <= troco && this.factory.getCashBox().count(r) > 0) {
+				while (r.getValue() <= troco) {
+					troco -= r.getValue();
+					changePlan[i]++;
+				}
 			}
+			i++;
 		}
-			
-		return troco == 0;
+		if (troco != 0) {
+			throw new CoffeeMachineException("");
+		}
+
+		return changePlan;
 	}
-	
-	public void liberarTroco(int troco2) {
-		
-		for (Coin moeda : Coin.reverse()) {
-			while (moeda.getValue() <= troco2) {
-				factory.getCashBox().release(moeda);
-				this.troco.add(moeda);
-				troco2 -= moeda.getValue();
+
+	private void liberarTroco(int[] changePlan) {
+
+		for (int i = 0; i < changePlan.length; i++) {
+			int count = changePlan[i];
+			Coin coin = Coin.reverse()[i];
+
+			for (int j = 1; j <= count; j++) {
+				this.factory.getCashBox().release(coin);
 			}
-			
-			
 		}
 	}
 
@@ -138,25 +145,25 @@ public class MyCoffeeMachine implements CoffeeMachine {
 			return;
 		} 
 
-		if(drink == this.drink.WHITE_SUGAR){
-			planejarTroco(calcTroco());	
-		}
+		int[] changePlan = null;
 		
-		if(drink == this.drink.WHITE){
-			if(!planejarTroco(this.totalCents - manager.getPreco())) {
+		if(drink != this.drink.BLACK){
+			try {
+				changePlan = planejarTroco();
+		
+			} catch (Exception e) {
 				factory.getDisplay().warn(Messages.NO_ENOUGHT_CHANGE);
 				returnCoins();
 				return;
 			}
 		}
-
+		
 		this.manager.mix();
 		this.manager.release();
 		
-		if(drink == this.drink.WHITE_SUGAR){
-		  liberarTroco(calcTroco());
+		if(drink != this.drink.BLACK){
+			liberarTroco(changePlan);
 		}
-		
 		
 		newSession();
 	
