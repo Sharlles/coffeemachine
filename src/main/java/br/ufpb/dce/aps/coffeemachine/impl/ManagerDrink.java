@@ -23,21 +23,30 @@ public class ManagerDrink {
 		}
 	}
 	
-	public boolean verificarIngredientes() {
+	public boolean verificarIngredientes(Drink drink) {
 		if (!this.factory.getCupDispenser().contains(1)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_CUP);
 			return false;
 		}
-		else if (!this.factory.getWaterDispenser().contains(100)) {
+		if (drink == drink.WHITE || drink == drink.WHITE_SUGAR){
+			if(!this.factory.getWaterDispenser().contains(80)){
+				this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
+				return false;
+			}
+		}
+		else{
+			
+			if(!this.factory.getWaterDispenser().contains(100)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_WATER);
 			return false;
+			}
 		}
-		else if (!this.factory.getCoffeePowderDispenser().contains(15)) {
+		if (!this.factory.getCoffeePowderDispenser().contains(15)) {
 			this.factory.getDisplay().warn(Messages.OUT_OF_COFFEE_POWDER);
 			return false;
 		}
 		else if (this.drink.getDrink() == Drink.WHITE || this.drink.getDrink() == Drink.WHITE_SUGAR){
-			if (!this.factory.getCreamerDispenser().contains(150)){
+			if (!this.factory.getCreamerDispenser().contains(20)){
 				this.factory.getDisplay().warn(Messages.OUT_OF_CREAMER);
 				return false;
 			}
@@ -55,10 +64,14 @@ public class ManagerDrink {
 		return true;
 	}	
 	
-	public void mix (){
+	public void mix (Drink drink){
 		this.factory.getDisplay().info(Messages.MIXING);
 		this.factory.getCoffeePowderDispenser().release(15);
-		this.factory.getWaterDispenser().release(100);
+		if(drink == drink.WHITE || drink == drink.WHITE_SUGAR)
+			this.factory.getWaterDispenser().release(80);
+		else{
+			this.factory.getWaterDispenser().release(100);
+		}
 	}
 	
 	public void release(){
